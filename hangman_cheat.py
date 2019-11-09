@@ -54,7 +54,8 @@ def guess_safest(query, remaining_symbols):
 	:return: The character to guess.
 	"""
 	commonality = {symbol: 0 for symbol in remaining_symbols}  # Initialise to 0.
-	candidates = filter_candidates(query, remaining_symbols)
+	candidates = list(filter_candidates(query, remaining_symbols))
+	print("Candidates ({count}):".format(count=len(candidates)), candidates)
 	any_candidate = False
 	for candidate in candidates:
 		any_candidate = True
