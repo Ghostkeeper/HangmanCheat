@@ -63,8 +63,14 @@ def guess_safest(query, remaining_symbols):
 	return max(remaining_symbols, key=lambda symbol: commonality[symbol])  # Return most common symbol.
 
 if __name__ == "__main__":
-	symbols = all_symbols.copy()
-	symbols.remove("a")
-	symbols.remove("n")
-	print(symbols)
-	print(guess_safest("*an**an", symbols))
+	print("Let me guess the word!")
+	query = input("")
+	while "*" in query:
+		remaining_symbols = all_symbols.copy()
+		for symbol in query:
+			if symbol != "*" and symbol in remaining_symbols:
+				remaining_symbols.remove(symbol)
+		guess = guess_safest(query, remaining_symbols)
+		print(guess)
+		remaining_symbols.remove(guess)
+		query = input("")
