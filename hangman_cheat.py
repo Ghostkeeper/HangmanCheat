@@ -55,10 +55,14 @@ def guess_safest(query, remaining_symbols):
 	"""
 	commonality = {symbol: 0 for symbol in remaining_symbols}  # Initialise to 0.
 	candidates = filter_candidates(query, remaining_symbols)
+	any_candidate = False
 	for candidate in candidates:
+		any_candidate = True
 		for symbol in remaining_symbols:
 			if symbol in candidate:
 				commonality[symbol] += 1
+	if not any_candidate:
+		print("I don't know that word!")
 
 	return max(remaining_symbols, key=lambda symbol: commonality[symbol])  # Return most common symbol.
 
