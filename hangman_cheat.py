@@ -62,10 +62,13 @@ def guess_safest(query, remaining_symbols):
 		for symbol in remaining_symbols:
 			if symbol in candidate:
 				commonality[symbol] += 1
+	best = max(remaining_symbols, key=lambda symbol: commonality[symbol])  # Return most common symbol.
 	if not any_candidate:
 		print("I don't know that word!")
+	else:
+		print("confidence {conf}%".format(conf=commonality[best] / len(candidates) * 100))
 
-	return max(remaining_symbols, key=lambda symbol: commonality[symbol])  # Return most common symbol.
+	return best
 
 if __name__ == "__main__":
 	remaining_symbols = all_symbols.copy()
