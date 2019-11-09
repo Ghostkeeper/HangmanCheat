@@ -27,3 +27,44 @@ unknown. For example:
                # The program terminates as there are no more letters to guess.
 """
 
+
+import functools
+import re
+
+with open("dictionary.txt") as f:
+	word_list = [word.strip() for word in f.readlines()]
+
+all_symbols = set()
+for word in word_list:
+	for symbol in word:
+		all_symbols.add(symbol)
+
+def filter_candidates(query, remaining_symbols):
+	remaining_symbols_re = "[" + re.escape("".join(remaining_symbols)) + "]"
+	query_re = "^" + re.escape(query).replace("\\*", remaining_symbols_re) + "$"
+	compiled = re.compile(query_re)
+	yield from filter(functools.partial(re.match, compiled), word_list)
+
+def guess_safest(query, remaining_symbols):
+	"""
+	Guesses the letter that has the least chance of not being present in the
+	word.
+	:param query: The remaining query, with asterisks in place of unknowns.
+	:param remaining_symbols: The characters to guess from.
+	:return: The character to guess.
+	"""
+	commonality = {symbol: 0 for symbol in remaining_symbols}  # Initialise to 0.
+	candidates = filter_candidates(query, remaining_symbols)
+	for candidate in candidates:
+		for symbol in remaining_symbols:
+			if symbol in candidate:
+				commonality[symbol] += 1
+
+	return max(remaining_symbols, key=lambda symbol: commonality[symbol])  # Return most common symbol.
+
+if __name__ == "__main__":
+	symbols = all_symbols.copy()
+	symbols.remove("a")
+	symbols.remove("n")
+	print(symbols)
+	print(guess_safest("*an**an", symbols))
